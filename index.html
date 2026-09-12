@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>@Nicoleta-git · Java / Spring Boot Developer</title>
+<meta name="description" content="@Nicoleta-git, Java / Spring Boot developer from Chisinau, Moldova. Backend APIs, PostgreSQL, Docker. Open to internships and junior roles.">
+<meta name="theme-color" content="#0a0c0f">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nicoleta-git.github.io/">
+<meta property="og:title" content="@Nicoleta-git · Java / Spring Boot Developer">
+<meta property="og:description" content="Backend developer: Spring Boot, PostgreSQL, Docker. Open to internships and junior roles.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e1115'/%3E%3Cpath d='M16 22l12 10-12 10' stroke='%237ee0a8' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M32 44h16' stroke='%237ee0a8' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0c0f;
+    --panel:#0e1115;
+    --bar:#12161b;
+    --line:#1d232a;
+    --line2:#2a323b;
+    --text:#c5cbd3;
+    --dim:#6f7883;
+    --bright:#eef1f4;
+    --accent:#7ee0a8;
+    --accent-dim:#3b6f53;
+    --blue:#8ab4f8;
+    --amber:#dfbd7f;
+    --red:#f28b82;
+    --mono:"JetBrains Mono","Cascadia Code","SF Mono",Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg) radial-gradient(1100px 520px at 50% -8%, #131a22 0%, rgba(10,12,15,0) 62%) no-repeat;
+    color:var(--text);
+    font-family:var(--mono);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:14px; padding:24px 16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:rgba(126,224,168,.25)}
+
+  /* ── window ─────────────────────────────────────────── */
+  .window{
+    width:100%; max-width:940px; height:min(84vh,760px);
+    background:var(--panel);
+    border:1px solid var(--line); border-radius:12px;
+    display:flex; flex-direction:column; overflow:hidden;
+    box-shadow:0 30px 80px -24px rgba(0,0,0,.75);
+  }
+  .bar{
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
+    padding:11px 14px; background:var(--bar); border-bottom:1px solid var(--line);
+  }
+  .dots{display:flex; gap:8px}
+  .dots i{width:11px; height:11px; border-radius:50%; background:var(--line2); transition:background .2s}
+  .window:hover .dots i:nth-child(1){background:#ff5f57}
+  .window:hover .dots i:nth-child(2){background:#febc2e}
+  .window:hover .dots i:nth-child(3){background:#28c840}
+  .bar .title{font-size:12.5px; color:var(--dim)}
+
+  nav.tabs{
+    display:flex; gap:2px; padding:7px 10px;
+    border-bottom:1px solid var(--line);
+    overflow-x:auto; scrollbar-width:none;
+  }
+  nav.tabs::-webkit-scrollbar{display:none}
+  nav.tabs button{
+    font:inherit; font-size:12.5px; color:var(--dim);
+    background:none; border:1px solid transparent; border-radius:6px;
+    padding:5px 11px; cursor:pointer; white-space:nowrap;
+    transition:color .15s, border-color .15s, background .15s;
+  }
+  nav.tabs button:hover{color:var(--bright); background:rgba(255,255,255,.03)}
+  nav.tabs button:focus-visible{outline:none; border-color:var(--line2); color:var(--bright)}
+  nav.tabs button.active{color:var(--accent); border-color:var(--accent-dim); background:rgba(126,224,168,.05)}
+
+  .screen{
+    position:relative; flex:1; overflow-y:auto;
+    padding:22px 24px 10px; font-size:14px; line-height:1.7;
+    scrollbar-width:thin; scrollbar-color:var(--line2) transparent;
+  }
+  .screen::-webkit-scrollbar{width:8px}
+  .screen::-webkit-scrollbar-thumb{background:var(--line2); border-radius:4px}
+
+  .inputline{
+    display:flex; align-items:center; gap:10px;
+    padding:13px 24px; background:var(--bar); border-top:1px solid var(--line);
+  }
+  #cmd{
+    flex:1; min-width:0; background:none; border:0; outline:0;
+    color:var(--bright); font:inherit; font-size:14px; caret-color:var(--accent);
+  }
+  #cmd::placeholder{color:var(--dim); opacity:.8}
+  .hint{font-size:11.5px; color:var(--dim); white-space:nowrap}
+  kbd{
+    font:inherit; font-size:11px; color:var(--text);
+    border:1px solid var(--line2); border-bottom-width:2px; border-radius:4px; padding:0 5px;
+  }
+
+  footer{font-size:12px; color:var(--dim); text-align:center}
+  footer a{color:var(--dim); border-bottom-color:var(--line2)}
+
+  /* ── output ─────────────────────────────────────────── */
+  .line{white-space:pre-wrap; word-break:break-word; min-height:1.7em}
+  .block{margin:2px 0 20px}
+  .cmdline{margin-top:4px}
+  .prompt{color:var(--accent); white-space:nowrap}
+  .prompt .path{color:var(--blue)}
+  .a{color:var(--accent)} .d{color:var(--dim)} .b{color:var(--bright)}
+  .blue{color:var(--blue)} .amber{color:var(--amber)} .red{color:var(--red)}
+  a{color:var(--blue); text-decoration:none; border-bottom:1px solid rgba(138,180,248,.3)}
+  a:hover{border-bottom-color:currentColor}
+  .h{color:var(--bright); font-weight:700; margin-bottom:8px}
+  .h .d{font-weight:400; margin-right:8px}
+  .block p{max-width:74ch; margin-bottom:10px}
+  .kv{display:grid; grid-template-columns:max-content 1fr; column-gap:24px}
+  .kv dt{color:var(--dim)}
+  .kv dd{color:var(--text)}
+  .cmds{display:grid; grid-template-columns:max-content 1fr; column-gap:28px}
+  .cmds button{
+    font:inherit; color:var(--accent); background:none; border:0; cursor:pointer;
+    text-align:left; padding:0;
+  }
+  .cmds button:hover{text-decoration:underline; text-underline-offset:3px}
+  .sub{color:var(--dim); margin-top:10px}
+
+  .fetch{display:grid; grid-template-columns:auto 1fr; gap:10px 40px; align-items:center; margin:2px 0 22px}
+  .art{color:var(--accent); font-size:64px; font-weight:700; line-height:1; letter-spacing:-2px; padding:0 8px 6px 4px}
+  .name{color:var(--bright); font-weight:700; font-size:15px}
+  .rule{color:var(--line2); overflow:hidden; white-space:nowrap}
+  .pulse{display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--accent);
+    margin-right:8px; vertical-align:middle; box-shadow:0 0 0 0 rgba(126,224,168,.5);
+    animation:pulse 2.4s ease-out infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(126,224,168,.45)}70%{box-shadow:0 0 0 7px rgba(126,224,168,0)}100%{box-shadow:0 0 0 0 rgba(126,224,168,0)}}
+
+  .proj{margin:0 0 16px; padding-left:14px; border-left:2px solid var(--line2); transition:border-color .2s}
+  .proj:hover{border-left-color:var(--accent-dim)}
+  .proj .head{display:flex; flex-wrap:wrap; align-items:baseline; gap:2px 12px}
+  .proj .t{color:var(--bright); font-weight:700}
+  .tag{font-size:11.5px; line-height:1.6; color:var(--dim); border:1px solid var(--line2); border-radius:4px; padding:0 6px}
+  .tag.ok{color:var(--accent); border-color:var(--accent-dim)}
+  .proj .desc{max-width:78ch}
+  .proj .note{color:var(--dim)}
+  .proj .stack{color:var(--amber); font-size:12.5px}
+  .proj .src{font-size:12.5px}
+
+  .cursor{display:inline-block; width:8px; height:1.05em; background:var(--accent); vertical-align:text-bottom; animation:blink 1.1s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  @media (max-width:680px){
+    body{padding:10px 8px; justify-content:flex-start; gap:10px}
+    .window{height:calc(100dvh - 54px); border-radius:10px}
+    .screen{font-size:13px; padding:16px 14px 8px}
+    .inputline{padding:12px 14px}
+    #cmd{font-size:16px} /* 16px stops iOS from zooming into the field */
+    .hint,.prompt .host{display:none}
+    .fetch{grid-template-columns:1fr}
+    .art{display:none}
+    .bar .title{font-size:11.5px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .pulse,.cursor{animation:none}
+  }
+</style>
+</head>
+<body>
+
+<main class="window" id="window">
+  <div class="bar">
+    <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="title">nicoleta-git@portfolio: ~</div>
+    <div></div>
+  </div>
+  <nav class="tabs" id="tabs" aria-label="Sections"></nav>
+  <div class="screen" id="screen" aria-live="polite"></div>
+  <div class="inputline">
+    <label class="prompt" for="cmd"><span class="host">nicoleta-git@portfolio:</span><span class="path">~</span>$</label>
+    <input id="cmd" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+           enterkeyhint="go" placeholder="type a command, e.g. projects">
+    <span class="hint"><kbd>Tab</kbd> complete &nbsp;<kbd>&uarr;</kbd> history</span>
+  </div>
+  <noscript>
+    <div class="screen">@Nicoleta-git, Java / Spring Boot developer.
+      GitHub: https://github.com/Nicoleta-git · Email: nicoleta.titei07@gmail.com</div>
+  </noscript>
+</main>
+
+<footer>
+  @Nicoleta-git &middot;
+  <a href="https://github.com/Nicoleta-git" target="_blank" rel="noopener">GitHub</a> &middot;
+  <a href="mailto:nicoleta.titei07@gmail.com">nicoleta.titei07@gmail.com</a>
+</footer>
+
+<script>
+/* ─────────────────────────────────────────────────────────────
+   CONTENT. Everything the terminal says lives in this section.
+   ───────────────────────────────────────────────────────────── */
+const GH    = "https://github.com/Nicoleta-git";
+const EMAIL = "nicoleta.titei07@gmail.com";
+
+const PROJECTS = [
+  {
+    name: "TyreVault", repo: "autoservice-manager", isPrivate: true,
+    state: "backend done · frontend in progress",
+    desc: "Workshop management for a car service in Chisinau: customers, vehicles, repair jobs, parts inventory and stock tracking.",
+    note: "8 entities · 9 Flyway migrations · 64 unit tests · transactional stock updates",
+    stack: "Java 21 · Spring Boot · PostgreSQL · Flyway · JUnit 5 · Mockito · React + TypeScript"
+  },
+  {
+    name: "Secure LLM Gateway", repo: "secure-llm-gateway", isPrivate: true,
+    state: "in progress",
+    desc: "Spring Boot API in front of a local LLM (Llama 3.1 on Ollama). Every request needs a Keycloak OAuth2 JWT, validated by Spring Security.",
+    note: "the whole stack starts with a single docker compose up",
+    stack: "Spring Boot · Spring Security · Spring AI · Keycloak · Ollama · Docker Compose"
+  },
+  {
+    name: "ScamHound", repo: "ScamHound", isPrivate: true,
+    state: "in progress",
+    desc: "Analyses scam patterns, lets users report scammers and informs the public about the most common scams.",
+    note: "CI with Maven · CodeQL scanning · Dependabot",
+    stack: "Java · Spring Boot · REST · GitHub Actions"
+  },
+  {
+    name: "BibliotecaCEITI", repo: "BibliotecaCEITI-WPF", isPrivate: false,
+    state: "complete",
+    desc: "Desktop app that replaces the paper registers of the CEITI school library: books, students, loans, reservations, overdue alerts and reports.",
+    note: "tested by the school librarian · one-click installer · CI + CodeQL",
+    stack: "C# · WPF · .NET 8 · MySQL · Gemini AI"
+  },
+  {
+    name: "Darwin", repo: "Darwin-Winform-Individual-Study", isPrivate: false,
+    state: "complete",
+    desc: "Sales system for an electronics shop with separate admin and customer interfaces, dashboards and RDLC reports.",
+    stack: "C# · WinForms · .NET Framework · SQL Server"
+  }
+];
+
+const h  = t => `<div class="h"><span class="d">##</span>${t}</div>`;
+const kv = rows => `<dl class="kv">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>`;
+const ext = (href, label) => `<a href="${href}" target="_blank" rel="noopener">${label}</a>`;
+
+const COMMANDS = {
+  about: {
+    desc: "who I am",
+    run: () => h("About") + `
+      <p>Java / Spring Boot developer and IT student at CEITI, Chisinau.</p>
+      <p>I build backends the way they are built in production: layered services,
+      database migrations, authentication, API documentation, tests and CI that runs on every push.</p>
+      <p>I also come from a design background (Figma, Illustrator, drawing), so I care about how
+      software feels to use, not only whether it works.</p>` +
+      kv([
+        ["currently",  "building TyreVault, a Spring Boot + React workshop app"],
+        ["learning",   "React, TypeScript, software architecture"],
+        ["available",  `<span class="a">internships &amp; junior backend roles</span>`]
+      ])
+  },
+
+  projects: {
+    desc: "selected work",
+    run: () => h("Projects") + PROJECTS.map(p => `
+      <div class="proj">
+        <div class="head">
+          <span class="t">${p.name}</span>
+          <span class="tag${p.state === "complete" ? " ok" : ""}">${p.state}</span>
+        </div>
+        <div class="desc">${p.desc}</div>
+        ${p.note ? `<div class="note">→ ${p.note}</div>` : ""}
+        <div class="stack">${p.stack}</div>
+        <div class="src">${p.isPrivate
+          ? `<span class="d">private repository · code walkthrough on request</span>`
+          : ext(`${GH}/${p.repo}`, `github.com/Nicoleta-git/${p.repo}`)}</div>
+      </div>`).join("") +
+      `<div class="d">More on ${ext(GH + "?tab=repositories", "GitHub")}.</div>`
+  },
+
+  skills: {
+    desc: "tech stack",
+    run: () => h("Skills") + kv([
+      ["languages", "Java, C#, SQL, C++, JavaScript / TypeScript"],
+      ["backend",   "Spring Boot, Spring Security, Spring Data JPA, REST, Spring AI"],
+      ["data",      "PostgreSQL, MySQL, SQL Server, MongoDB, Flyway, Hibernate"],
+      ["auth",      "OAuth2 / JWT, Keycloak"],
+      ["testing",   "JUnit 5, Mockito"],
+      ["devops",    "Docker, Docker Compose, GitHub Actions, Maven, Git"],
+      ["frontend",  `React, Tailwind CSS, HTML / CSS <span class="d">(learning)</span>`],
+      ["desktop",   "WPF, WinForms, .NET 8"],
+      ["design",    "Figma, Photoshop, Illustrator, Blender"]
+    ])
+  },
+
+  experience: {
+    desc: "what I have shipped",
+    run: () => h("Experience") + `
+      <div class="proj">
+        <div class="head"><span class="t">BibliotecaCEITI</span><span class="d">software for the CEITI library</span></div>
+        <div class="desc">Built a desktop system for a real user. The school librarian tested it and it is
+        ready to be deployed school-wide.</div>
+      </div>
+      <div class="proj">
+        <div class="head"><span class="t">Independent backend projects</span></div>
+        <div class="desc">Designed and shipped backends end to end: schema design, Flyway migrations,
+        JWT / OAuth2 auth, Swagger docs, Docker and GitHub Actions pipelines.</div>
+      </div>
+      <div class="d">No professional role yet. Looking for a first internship.</div>`
+  },
+
+  education: {
+    desc: "studies",
+    run: () => h("Education") + `
+      <div class="proj">
+        <div class="head"><span class="t">CEITI</span><span class="d">Chisinau, Moldova</span></div>
+        <div class="desc">Information Technology · currently studying</div>
+        <div class="note">OOP · Data Structures &amp; Algorithms · Databases · Design Patterns ·
+        Software Analysis &amp; Design · Desktop Programming</div>
+      </div>`
+  },
+
+  certs: {
+    desc: "certifications",
+    run: () => h("Certifications") + kv([
+      [`<span class="a">✓</span>`, "IT Specialist · Java"],
+      [`<span class="a">✓</span>`, "IT Specialist · Databases"],
+      [`<span class="a">✓</span>`, "IT Specialist · Networking"]
+    ])
+  },
+
+  contact: {
+    desc: "get in touch",
+    run: () => h("Contact") + kv([
+      ["email",  `<a href="mailto:${EMAIL}">${EMAIL}</a>`],
+      ["github", ext(GH, "github.com/Nicoleta-git")]
+    ]) + `<div class="sub">Happy to talk about internships, junior backend roles or anything Java.</div>`
+  },
+
+  help: {
+    desc: "list commands",
+    run: () => h("Commands") +
+      `<div class="cmds">${Object.entries(COMMANDS).map(([n, c]) =>
+        `<button type="button" data-cmd="${n}">${n}</button><span class="d">${c.desc}</span>`).join("")}
+        <button type="button" data-cmd="clear">clear</button><span class="d">clear the screen</span>
+      </div>
+      <div class="sub">Also try whoami, ls, date or sudo.</div>`
+  }
+};
+
+/* old links like ?c=--profile keep working */
+const ALIASES = { profile: "about", status: "about", achievements: "certs", h: "help", cls: "clear" };
+
+const EXTRAS = {
+  whoami:  () => `@Nicoleta-git, a backend developer who likes a good terminal.`,
+  ls:      () => Object.keys(COMMANDS).map(n => `<span class="blue">${n}/</span>`).join("  "),
+  pwd:     () => `/home/nicoleta-git/portfolio`,
+  date:    () => new Date().toString(),
+  echo:    args => esc(args.join(" ")),
+  history: () => hist.map((c, i) => `<span class="d">${String(i + 1).padStart(3)}</span>  ${esc(c)}`).join("\n"),
+  sudo:    args => args.join(" ").toLowerCase().startsWith("hire")
+             ? `<span class="a">Permission granted.</span> Reach me at <a href="mailto:${EMAIL}">${EMAIL}</a>.`
+             : `<span class="red">nicoleta-git is not in the sudoers file.</span> <span class="d">(try: sudo hire nicoleta-git)</span>`,
+  exit:    () => `<span class="d">There is no exit, only</span> <span class="a">help</span><span class="d">.</span>`
+};
+
+const TABS = ["about", "projects", "skills", "experience", "education", "certs", "contact", "help"];
+
+/* ─────────────────────────────────────────────────────────────
+   ENGINE
+   ───────────────────────────────────────────────────────────── */
+const screen = document.getElementById("screen");
+const input  = document.getElementById("cmd");
+const tabs   = document.getElementById("tabs");
+const hist = [];
+let hIndex = 0;
+
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const finePointer  = matchMedia("(pointer: fine)").matches;
+const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function out(html, cls = "block"){
+  const el = document.createElement("div");
+  el.className = cls;
+  el.innerHTML = html;
+  screen.appendChild(el);
+  return el;
+}
+
+function promptLine(text){
+  return out(`<span class="prompt">~$</span> <span class="b">${esc(text)}</span>`, "line cmdline");
+}
+
+function resolve(word){
+  const bare = word.toLowerCase().replace(/^-+/, "");
+  return has(ALIASES, bare) ? ALIASES[bare] : bare;
+}
+
+function setActive(name){
+  tabs.querySelectorAll("button").forEach(b => b.classList.toggle("active", b.dataset.cmd === name));
+}
+
+/* long output (projects) should be read from its first line, so pin the
+   command line to the top of the screen instead of scrolling to the end */
+function reveal(el){
+  screen.scrollTo({ top: Math.max(0, el.offsetTop - 14), behavior: reduceMotion ? "auto" : "smooth" });
+}
+
+function exec(raw, lineEl){
+  const text = raw.trim();
+  const echoEl = lineEl || promptLine(raw);
+  if (!text){ reveal(echoEl); return; }
+
+  hist.push(text);
+  hIndex = hist.length;
+
+  const [first, ...args] = text.split(/\s+/);
+  const name = resolve(first);
+
+  if (name === "clear"){ screen.innerHTML = ""; setActive(null); return; }
+
+  if (has(COMMANDS, name)){
+    out(COMMANDS[name].run(args));
+    setActive(name);
+  } else if (has(EXTRAS, name)){
+    out(EXTRAS[name](args), "block line");
+  } else {
+    out(`<span class="red">command not found:</span> ${esc(first)}\n<span class="d">Type</span> <span class="a">help</span> <span class="d">to see what is available.</span>`, "block line");
+  }
+  reveal(echoEl);
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* types HTML out: tags land instantly, visible text char by char */
+async function typeInto(el, html, speed = 16){
+  if (reduceMotion){ el.innerHTML = html; return; }
+  let i = 0, buf = "";
+  while (i < html.length){
+    if (html[i] === "<"){
+      const end = html.indexOf(">", i);
+      buf += html.slice(i, end + 1);
+      i = end + 1;
+      continue;
+    }
+    if (html[i] === "&"){
+      const end = html.indexOf(";", i);
+      buf += html.slice(i, end + 1);
+      i = end + 1;
+    } else {
+      buf += html[i++];
+    }
+    el.innerHTML = buf + `<span class="cursor"></span>`;
+    await sleep(speed);
+  }
+  el.innerHTML = buf;
+}
+
+function banner(){
+  return `<div class="fetch">
+    <div class="art" aria-hidden="true">&gt;_</div>
+    <div>
+      <div class="name">@Nicoleta-git</div>
+      <div class="rule">────────────────────────────────────────</div>
+      ${kv([
+        ["role",     "Java / Spring Boot developer"],
+        ["focus",    "Backend APIs · PostgreSQL · Docker"],
+        ["based in", "Chisinau, Moldova"],
+        ["status",   `<span class="pulse"></span><span class="a">open to internships &amp; junior roles</span>`]
+      ])}
+    </div>
+  </div>`;
+}
+
+async function boot(){
+  out(banner(), "block");
+  const welcome = out("", "line");
+  await typeInto(welcome,
+    `Welcome. Pick a section above or type a command below. Start with <span class="a">projects</span>.`);
+  out("", "line");
+
+  const deep = new URLSearchParams(location.search).get("c");
+  if (deep){
+    await sleep(250);
+    const line = out("", "line cmdline");
+    await typeInto(line, `<span class="prompt">~$</span> <span class="b">${esc(deep)}</span>`, 40);
+    exec(deep, line);
+  }
+  if (finePointer) input.focus();
+}
+
+/* ── input ─────────────────────────────────────────── */
+TABS.forEach(n => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.textContent = n;
+  b.dataset.cmd = n;
+  tabs.appendChild(b);
+});
+
+document.addEventListener("click", e => {
+  const btn = e.target.closest("button[data-cmd]");
+  if (!btn) return;
+  exec(btn.dataset.cmd);
+  if (finePointer) input.focus();
+});
+
+input.addEventListener("keydown", e => {
+  if (e.key === "Enter"){
+    exec(input.value);
+    input.value = "";
+  } else if (e.key === "ArrowUp"){
+    e.preventDefault();
+    if (hIndex > 0) input.value = hist[--hIndex];
+  } else if (e.key === "ArrowDown"){
+    e.preventDefault();
+    if (hIndex < hist.length - 1) input.value = hist[++hIndex];
+    else { hIndex = hist.length; input.value = ""; }
+  } else if (e.key === "Tab"){
+    e.preventDefault();
+    const partial = input.value.trim().toLowerCase().replace(/^-+/, "");
+    if (!partial) return;
+    const names = [...Object.keys(COMMANDS), "clear", ...Object.keys(EXTRAS)];
+    const matches = names.filter(n => n.startsWith(partial));
+    if (matches.length === 1) input.value = matches[0];
+    else if (matches.length > 1){
+      promptLine(input.value);
+      out(matches.map(m => `<span class="a">${m}</span>`).join("   "), "block line");
+      screen.scrollTop = screen.scrollHeight;
+    }
+  } else if (e.key === "l" && e.ctrlKey){
+    e.preventDefault();
+    exec("clear");
+  }
+});
+
+/* clicking the terminal focuses the prompt, unless the visitor is selecting text */
+screen.addEventListener("mouseup", () => {
+  if (finePointer && !getSelection().toString()) input.focus();
+});
+
+boot();
+</script>
+</body>
+</html>
